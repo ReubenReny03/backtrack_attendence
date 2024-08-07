@@ -29,7 +29,7 @@ def find_days_and_periods(data):
 
 # Function to match periods with classes and find subjects marked as absent
 def find_absent_subjects(attendance_data, schedule_data):
-    subjects_absent = []
+    subjects_absent = {}
     for attendance in attendance_data:
         day_of_week = attendance['day_of_week']
         periods_marked = attendance['periods_marked']
@@ -40,12 +40,13 @@ def find_absent_subjects(attendance_data, schedule_data):
                     period_key = period.replace("hatthouR", "stthouR") + "DESC"
                     if period_key in class_hour and class_hour[period_key]:
                         subject_code = class_hour[period_key].split()[0]
-                        subjects_absent.append({
+                        if subject_code not in subjects_absent:
+                            subjects_absent[subject_code] = []
+                        subjects_absent[subject_code].append({
                             'date': attendance['date'],
                             'day_of_week': day_of_week,
                             'period': period.replace("hatthouR", "Hour "),
-                            'status': status,
-                            'subject': subject_code
+                            'status': status
                         })
     return subjects_absent
 
@@ -54,6 +55,11 @@ class PDF(FPDF):
     def header(self):
         self.set_font('Arial', 'B', 12)
         self.cell(0, 10, 'Attendance Report', 0, 1, 'C')
+
+    def chapter_title(self, subject):
+        self.set_font('Arial', 'B', 12)
+        self.cell(0, 10, subject, 0, 1, 'L')
+        self.ln(5)
 
     def table(self, headers, data):
         self.set_font('Arial', 'B', 10)
@@ -96,15 +102,18 @@ def generate_pdf():
         absent_subjects = find_absent_subjects(processed_data, schedule_data)
         
         # Define table headers
-        headers = ["Date", "Day", "Period", "Subject", "Status"]
+        headers = ["Date", "Day", "Period", "Status"]
         
         # Create an instance of the PDF class
         pdf = PDF()
         pdf.add_page()
-        pdf.table(headers, [
-            [record['date'], record['day_of_week'], record['period'], record['subject'], record['status']]
-            for record in absent_subjects
-        ])
+        
+        for subject, records in absent_subjects.items():
+            pdf.chapter_title(subject)
+            pdf.table(headers, [
+                [record['date'], record['day_of_week'], record['period'], record['status']]
+                for record in records
+            ])
         
         # Create a BytesIO object to save the PDF in memory
         pdf_output = io.BytesIO()
