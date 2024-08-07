@@ -5,7 +5,7 @@ from datetime import datetime
 import os
 import io
 
-app = Flask(__name__, template_folder='../templates')
+app = Flask(__name__, template_folder='./templates')
 
 # Function to find the day from the date and identify periods marked as U or A
 def find_days_and_periods(data):
