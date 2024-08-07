@@ -6,7 +6,7 @@ from datetime import datetime
 import os
 import io
 
-app = Flask(__name__, template_folder='../templates')
+app = Flask(__name__, template_folder='./templates')
 
 # Configure logging
 logging.basicConfig(level=logging.DEBUG)
