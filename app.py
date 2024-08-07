@@ -3,10 +3,9 @@ from flask import Flask, request, send_file, render_template, jsonify
 from fpdf import FPDF
 import json
 from datetime import datetime
-import os
 import io
 
-app = Flask(__name__, template_folder='./templates')
+app = Flask(__name__, template_folder='../templates')
 
 # Configure logging
 logging.basicConfig(level=logging.DEBUG)
@@ -111,11 +110,13 @@ def generate_pdf():
         pdf_output = io.BytesIO()
         
         # Output the PDF to the BytesIO object
-        pdf.output(pdf_output)
+        pdf_str = pdf.output(dest='S').encode('latin1')
+        pdf_output.write(pdf_str)
         
         # Move the cursor to the beginning of the BytesIO object
         pdf_output.seek(0)
         
+        # Send the file
         return send_file(pdf_output, mimetype='application/pdf', as_attachment=True, download_name="attendance_report.pdf")
     
     except Exception as e:
