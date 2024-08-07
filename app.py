@@ -1,3 +1,4 @@
+import logging
 from flask import Flask, request, send_file, render_template, jsonify
 from fpdf import FPDF
 import json
@@ -5,7 +6,10 @@ from datetime import datetime
 import os
 import io
 
-app = Flask(__name__, template_folder='./templates')
+app = Flask(__name__, template_folder='../templates')
+
+# Configure logging
+logging.basicConfig(level=logging.DEBUG)
 
 # Function to find the day from the date and identify periods marked as U or A
 def find_days_and_periods(data):
@@ -76,8 +80,17 @@ def generate_pdf():
         schedule_json = request.form['schedule_json']
         
         # Parse JSON data
-        attendance_data = json.loads(attendance_json)
-        schedule_data = json.loads(schedule_json)
+        try:
+            attendance_data = json.loads(attendance_json)
+        except json.JSONDecodeError as json_err:
+            logging.error("Error decoding attendance JSON: %s", json_err)
+            return jsonify({"error": "Invalid attendance JSON format"}), 400
+
+        try:
+            schedule_data = json.loads(schedule_json)
+        except json.JSONDecodeError as json_err:
+            logging.error("Error decoding schedule JSON: %s", json_err)
+            return jsonify({"error": "Invalid schedule JSON format"}), 400
         
         # Process data
         processed_data = find_days_and_periods(attendance_data)
@@ -103,10 +116,11 @@ def generate_pdf():
         # Move the cursor to the beginning of the BytesIO object
         pdf_output.seek(0)
         
-        return send_file(pdf_output, attachment_filename="attendance_report.pdf", as_attachment=True)
+        return send_file(pdf_output, mimetype='application/pdf', as_attachment=True, download_name="attendance_report.pdf")
     
     except Exception as e:
-        return jsonify({"error": str(e)})
+        logging.error("Error: %s", e)
+        return jsonify({"error": str(e)}), 500
 
 if __name__ == '__main__':
     app.run(debug=True)
