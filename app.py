@@ -10,6 +10,11 @@ app = Flask(__name__, template_folder='./templates')
 # Configure logging
 logging.basicConfig(level=logging.DEBUG)
 
+# Hardcoded dictionary for special Saturday schedules
+special_saturdays = {
+    "2024-07-20T00:00:00": "THU" 
+}
+
 # Function to find the day from the date and identify periods marked as U or A
 def find_days_and_periods(data):
     result = []
@@ -18,6 +23,10 @@ def find_days_and_periods(data):
         date_obj = datetime.strptime(date_str, "%Y-%m-%dT00:00:00")
         day_of_week = date_obj.strftime("%A")
         
+        # Check for special Saturday schedules
+        if date_str in special_saturdays:
+            day_of_week = f"{special_saturdays[date_str]} (SATURDAY)"
+        print(record.items())
         periods_marked = {k: v for k, v in record.items() if v in ["U", "A"]}
         
         result.append({
@@ -33,9 +42,11 @@ def find_absent_subjects(attendance_data, schedule_data):
     for attendance in attendance_data:
         day_of_week = attendance['day_of_week']
         periods_marked = attendance['periods_marked']
-        
+        # Strip off the " (SATURDAY)" part for comparison
+        comparison_day = day_of_week.split()[0].upper()
+
         for class_hour in schedule_data['classesHours']:
-            if class_hour['sttdaydesc'][:3].upper() == day_of_week[:3].upper():
+            if class_hour['sttdaydesc'][:3].upper() == comparison_day[:3]:
                 for period, status in periods_marked.items():
                     period_key = period.replace("hatthouR", "stthouR") + "DESC"
                     if period_key in class_hour and class_hour[period_key]:
@@ -48,6 +59,7 @@ def find_absent_subjects(attendance_data, schedule_data):
                             'period': period.replace("hatthouR", "Hour "),
                             'status': status
                         })
+
     return subjects_absent
 
 # Create PDF
