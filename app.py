@@ -5,7 +5,7 @@ import json
 from datetime import datetime
 import io
 
-app = Flask(__name__, template_folder='../templates')
+app = Flask(__name__, template_folder='./templates')
 
 # Configure logging
 logging.basicConfig(level=logging.DEBUG)

@@ -6,7 +6,7 @@
     <title>Attendance Report Generator</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
-<body class="bg-gray-100 flex flex-col  items-center h-screen">
+<body>
 
     <div class="w-full bg-blue-600 py-4">
         <div class="container mx-auto text-center">
@@ -15,19 +15,33 @@
         </div>
     </div>
 
-    <div class="bg-white p-8 justify-center rounded-lg shadow-md w-full max-w-lg mt-8">
-        <h1 class="text-2xl font-bold text-center mb-4">Attendance Report Generator</h1>
-        <form action="/generate_pdf" method="post">
-            <div class="mb-4">
-                <label for="attendance_json" class="block text-gray-700 font-bold mb-2">Attendance JSON Data:</label>
-                <textarea id="attendance_json" name="attendance_json" required class="w-full px-3 py-2 text-gray-700 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
-            </div>
-            <div class="mb-4">
-                <label for="schedule_json" class="block text-gray-700 font-bold mb-2">Schedule JSON Data:</label>
-                <textarea id="schedule_json" name="schedule_json" required class="w-full px-3 py-2 text-gray-700 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
-            </div>
-            <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition duration-300">Generate PDF</button>
-        </form>
+    <div class="w-full bg-red-600 py-4">
+        <p class="text-white">Currently we are not getting the attendence of working saterdays so please be carefull of that.</p>
+    </div>
+
+    <div class="container mx-auto mt-8 flex justify-center items-start h-screen">
+        <!-- How to use this section -->
+        <div class="bg-white p-8 rounded-lg shadow-md w-1-1/2 mr-4">
+            <h1 class="text-2xl font-bold mb-4">How to use this</h1>
+            <p>It is hard to use the first time but can really help you if you really need it.</p>
+            <iframe width="420" height="315" src="https://www.youtube.com/embed/rRaOBJoD8DY?autoplay=0&mute=0"></iframe>
+        </div>
+
+        <!-- Attendance Report Generator form -->
+        <div class="bg-white p-8 rounded-lg shadow-md w-1/2 ml-4">
+            <h1 class="text-2xl font-bold text-center mb-4">Attendance Report Generator</h1>
+            <form action="/generate_pdf" method="post">
+                <div class="mb-4">
+                    <label for="attendance_json" class="block text-gray-700 font-bold mb-2">Attendance JSON Data:</label>
+                    <textarea id="attendance_json" name="attendance_json" required class="w-full px-3 py-2 text-gray-700 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+                </div>
+                <div class="mb-4">
+                    <label for="schedule_json" class="block text-gray-700 font-bold mb-2">Schedule JSON Data:</label>
+                    <textarea id="schedule_json" name="schedule_json" required class="w-full px-3 py-2 text-gray-700 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+                </div>
+                <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition duration-300">Generate PDF</button>
+            </form>
+        </div>
     </div>
 
 </body>
