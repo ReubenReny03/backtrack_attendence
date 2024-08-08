@@ -5,29 +5,59 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Attendance Report Generator</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" rel="stylesheet">
+
+    <script>
+        function checkDeviceWidth() {
+            if (window.innerWidth < 1024) {
+                fetch('https://api.imgflip.com/get_memes') // Example API endpoint
+                    .then(response => response.json())
+                    .then(data => {
+                        const memes = data.data.memes;
+                        const randomMeme = memes[Math.floor(Math.random() * memes.length)];
+                        document.body.innerHTML = `
+                            <div style="height: 100vh; display: flex; align-items: center; justify-content: center; flex-direction: column;">
+                                <h1>Please use a desktop device for the best experience.</h1>
+                                <img src="${randomMeme.url}" alt="Random Meme" style="margin-top: 20px; max-width: 90%; border-radius: 10px;">
+                            </div>`;
+                    })
+                    .catch(error => {
+                        console.error('Error fetching meme:', error);
+                        document.body.innerHTML = `
+                            <div style="height: 100vh; display: flex; align-items: center; justify-content: center; flex-direction: column;">
+                                <h1>Please use a desktop device for the best experience.</h1>
+                                <p>Failed to load meme.</p>
+                            </div>`;
+                    });
+            }
+        }
+    </script>
+    
 </head>
-<body>
+<body onload="checkDeviceWidth()">
 
     <div class="w-full bg-blue-600 py-4">
-        <div class="container mx-auto text-center">
+        <div class="container mx-auto text-center flex justify-center items-center">
             <a href="https://forms.gle/tgz7FputKV2HUhZR6" target="_blank" class="text-white px-4 py-2 rounded bg-blue-800 hover:bg-blue-900 transition duration-300">Colab with me</a>
-            <a href="https://forms.gle/5vnsGrYcF828Zb48A" target="_blank" class="text-white px-4 py-2 rounded bg-blue-800 hover:bg-blue-900 transition duration-300 ml-4">Report Bugs</a>
+            <a href="https://github.com/ReubenReny03/backtrack_attendence" target="_blank" class="mx-4">
+                <i class="fab fa-github text-white text-3xl"></i>
+            </a>
+            
+            <a href="https://forms.gle/5vnsGrYcF828Zb48A" target="_blank" class="text-white px-4 py-2 rounded bg-blue-800 hover:bg-blue-900 transition duration-300">Report Bugs</a>
         </div>
     </div>
+    
 
     <div class="w-full bg-red-600 py-4">
-        <p class="text-white">Patch Note 1 : all problems were fixed but the app could have bugs please report them in the link above -- thank you ~ReMo </p>
+        <p class="text-white">Patch Note 2 : access to mobile devices removed -- thank you ~ReMo </p>
     </div>
 
     <div class="container mx-auto mt-8 flex justify-center items-start h-screen">
-        <!-- How to use this section -->
         <div class="bg-white p-8 rounded-lg shadow-md w-1-1/2 mr-4">
             <h1 class="text-2xl font-bold mb-4">How to use this</h1>
             <p>It is hard to use the first time but can really help you if you really need it.</p>
-            <iframe width="420" height="315" src="https://www.youtube.com/embed/rRaOBJoD8DY?autoplay=0&mute=0"></iframe>
+            <iframe width="780" height="420" src="https://www.youtube.com/embed/rRaOBJoD8DY?autoplay=0&mute=0"></iframe>
         </div>
-
-        <!-- Attendance Report Generator form -->
         <div class="bg-white p-8 rounded-lg shadow-md w-1/2 ml-4">
             <h1 class="text-2xl font-bold text-center mb-4">Attendance Report Generator</h1>
             <form action="/generate_pdf" method="post">
